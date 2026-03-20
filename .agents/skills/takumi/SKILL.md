@@ -54,6 +54,7 @@ export default function MyCard() {
 - The `render` config is optional (defaults: 1200×630, webp)
 - Use Tailwind CSS classes via the `tw` prop (e.g., `tw="text-2xl font-bold"`)
 - Use `style` prop for inline CSS (gradients, custom colors, etc.)
+- **Always add `flex` explicitly** — v1 defaults `display` to `inline`, not `flex`
 
 ## CLI Usage
 
@@ -70,8 +71,8 @@ takumi render my-card.tsx -w 800 -H 400
 # Override format
 takumi render my-card.tsx -f jpeg -q 85
 
-# Pipe JSX from stdin
-echo '<div tw="w-full h-full bg-red-500"/>' | takumi render -o out.png
+# Pipe JSX from stdin (must include flex explicitly)
+echo '<div tw="w-full h-full flex items-center bg-red-500"/>' | takumi render -o out.png
 
 # With custom font
 takumi render my-card.tsx --fonts ./MyFont.ttf

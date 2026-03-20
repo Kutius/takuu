@@ -3,7 +3,7 @@ import { defineConfig } from 'tsdown'
 export default defineConfig({
   entry: ['src/cli.ts'],
   platform: 'node',
-  format: 'cjs',
+  format: 'esm',
   outDir: 'dist',
   clean: true,
   banner: { js: '#!/usr/bin/env node' },

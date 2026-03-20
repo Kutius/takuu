@@ -9,9 +9,16 @@ import {
 import { pathToFileURL } from "node:url";
 import { randomBytes } from "node:crypto";
 import React from "react";
-import { ImageResponse } from "@takumi-rs/image-response";
+import { fromJsx } from "@takumi-rs/helpers/jsx";
+import { extractEmojis } from "@takumi-rs/helpers/emoji";
+import { fetchResources } from "@takumi-rs/helpers";
+import { Renderer, extractResourceUrls } from "@takumi-rs/core";
+import type { EmojiType } from "@takumi-rs/helpers/emoji";
 import { transformSync } from "oxc-transform";
 import type { ComponentModule, RenderOptions } from "./types.ts";
+
+// Reuse a single Renderer instance (per takumi docs)
+const renderer = new Renderer();
 
 // Track temp files for cleanup on crash
 const tmpFiles = new Set<string>();
@@ -114,18 +121,27 @@ export async function render(input: string, options: RenderOptions) {
 
   const Component = mod.default;
   const element = React.createElement(Component);
+  let { node, stylesheets } = await fromJsx(element);
 
-  // Use ImageResponse for full feature support (emoji, etc.)
-  const response = new ImageResponse(element, {
+  // Process emoji if provider is specified
+  let fetchedResources;
+  if (emoji) {
+    node = extractEmojis(node, emoji as EmojiType);
+    const resourceUrls = extractResourceUrls(node);
+    if (resourceUrls.length > 0) {
+      fetchedResources = await fetchResources(resourceUrls);
+    }
+  }
+
+  const buffer: Buffer = await renderer.render(node, {
     width,
     height,
     format,
     quality,
     devicePixelRatio,
-    emoji: emoji as string,
-  } as any);
-
-  const buffer = Buffer.from(await response.arrayBuffer());
+    fetchedResources,
+    stylesheets,
+  });
 
   const outputPath = resolveOutputPath(filePath, format, options);
   mkdirSync(dirname(outputPath), { recursive: true });
