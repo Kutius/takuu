@@ -8,6 +8,7 @@ import {
 } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { randomBytes } from "node:crypto";
+import { createRequire } from "node:module";
 import React from "react";
 import { fromJsx } from "@takumi-rs/helpers/jsx";
 import { extractEmojis } from "@takumi-rs/helpers/emoji";
@@ -17,10 +18,8 @@ import type { EmojiType } from "@takumi-rs/helpers/emoji";
 import { transformSync } from "oxc-transform";
 import type { ComponentModule, RenderOptions } from "./types.ts";
 
-// Reuse a single Renderer instance (per takumi docs)
 const renderer = new Renderer();
 
-// Track temp files for cleanup on crash
 const tmpFiles = new Set<string>();
 
 function cleanup() {
@@ -65,6 +64,23 @@ function transpile(filePath: string, source: string): string {
   return code;
 }
 
+// Rewrite bare import specifiers to absolute paths so the temp file
+// can be placed anywhere (critical for global/npx installs)
+function rewriteImports(code: string): string {
+  const req = createRequire(require.resolve("@takumi-rs/core"));
+  return code.replace(
+    /from\s+["']([^"']+)["']/g,
+    (match, specifier) => {
+      if (specifier.startsWith(".") || specifier.startsWith("/")) return match;
+      try {
+        return `from "${req.resolve(specifier)}"`;
+      } catch {
+        return match;
+      }
+    },
+  );
+}
+
 function resolveOutputPath(
   inputPath: string,
   format: string,
@@ -79,7 +95,7 @@ function resolveOutputPath(
 
 export async function render(input: string, options: RenderOptions) {
   const { filePath, source } = loadSource(input);
-  const code = transpile(filePath, source);
+  const code = rewriteImports(transpile(filePath, source));
 
   const srcDir = dirname(filePath);
   const tmpPath = resolve(
@@ -107,7 +123,6 @@ export async function render(input: string, options: RenderOptions) {
     );
   }
 
-  // Merge config: CLI options override file config
   const cleanOptions = Object.fromEntries(
     Object.entries(options).filter(([, v]) => v !== undefined),
   );
