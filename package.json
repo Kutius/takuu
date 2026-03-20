@@ -1,0 +1,38 @@
+{
+  "name": "takumi-cli",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "CLI tool for rendering JSX/TSX components to images using Takumi.",
+  "author": "",
+  "license": "MIT",
+  "bin": {
+    "takumi": "dist/cli.cjs"
+  },
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@takumi-rs/core": "^0.73.1",
+    "@takumi-rs/helpers": "^0.73.1",
+    "@takumi-rs/image-response": "^0.73.1",
+    "cac": "^7.0.0",
+    "oxc-transform": "^0.121.0",
+    "picocolors": "^1.1.1",
+    "react": "^19.2.4"
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "tsdown": "^0.21.3",
+    "typescript": "^5.9.3"
+  }
+}

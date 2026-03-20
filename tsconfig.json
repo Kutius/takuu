@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "target": "esnext",
+    "module": "preserve",
+    "moduleResolution": "bundler"
+  },
+  "include": ["./**/*.tsx", "./**/*.jsx"]
+}
