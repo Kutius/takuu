@@ -1,12 +1,12 @@
 {
-  "name": "takumi-cli",
+  "name": "takuu",
   "type": "module",
   "version": "0.1.0",
-  "description": "CLI tool for rendering JSX/TSX components to images using Takumi.",
+  "description": "JSX → Image CLI. Render React components to images using Takumi.",
   "author": "",
   "license": "MIT",
   "bin": {
-    "takumi": "dist/cli.mjs"
+    "takuu": "dist/cli.mjs"
   },
   "exports": {
     "./package.json": "./package.json"

@@ -9,7 +9,7 @@ const pkg = JSON.parse(
   readFileSync(resolve(import.meta.dirname, "../package.json"), "utf-8"),
 );
 
-const cli = cac("takumi");
+const cli = cac("takuu");
 
 cli.version(pkg.version);
 
@@ -46,7 +46,7 @@ cli
           if (process.stdin.isTTY) {
             console.error(
               pc.red("✗") +
-                " No input file. Usage: takumi render <file.tsx>",
+                " No input file. Usage: takuu render <file.tsx>",
             );
             process.exit(1);
           }

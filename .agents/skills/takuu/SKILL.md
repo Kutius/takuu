@@ -1,8 +1,8 @@
-# Skill: takumi
+# Skill: takuu
 
 # JSX → Image Rendering
 
-Render React components to images (PNG, WebP, JPEG) using the Takumi CLI.
+Render React components to images (PNG, WebP, JPEG) using `takuu`.
 
 ## When to Use This Skill
 
@@ -14,19 +14,19 @@ Use this skill when the user asks to:
 
 ## Prerequisites
 
-The `takumi-cli` must be installed:
+`takuu` must be installed:
 
 ```bash
-npm install -g takumi-cli
+npm install -g takuu
 # or use npx
-npx takumi-cli render <file>
+npx takuu render <file>
 ```
 
 ## How It Works
 
 1. Write a `.tsx` file that exports a React component as `default`
 2. Optionally export a `render` config object with `width`, `height`, `format`
-3. Run `takumi render <file.tsx>` to output the image
+3. Run `takuu render <file.tsx>` to output the image
 
 ## Component File Format
 
@@ -60,22 +60,22 @@ export default function MyCard() {
 
 ```bash
 # Basic render (uses file config)
-takumi render my-card.tsx
+takuu render my-card.tsx
 
 # Override output path
-takumi render my-card.tsx -o output/hero.png
+takuu render my-card.tsx -o output/hero.png
 
 # Override dimensions (-H for height, -h is help)
-takumi render my-card.tsx -w 800 -H 400
+takuu render my-card.tsx -w 800 -H 400
 
 # Override format
-takumi render my-card.tsx -f jpeg -q 85
+takuu render my-card.tsx -f jpeg -q 85
 
 # Pipe JSX from stdin (must include flex explicitly)
-echo '<div tw="w-full h-full flex items-center bg-red-500"/>' | takumi render -o out.png
+echo '<div tw="w-full h-full flex items-center bg-red-500"/>' | takuu render -o out.png
 
 # With custom font
-takumi render my-card.tsx --fonts ./MyFont.ttf
+takuu render my-card.tsx --fonts ./MyFont.ttf
 ```
 
 ## Common Patterns
@@ -161,4 +161,4 @@ Takumi supports a subset of CSS via its Rust layout engine:
 - Use `style` for CSS properties not available as Tailwind classes (like gradients)
 - Default fonts include Geist and Geist Mono; custom fonts require loading via the `Renderer`
 - For images within components, use remote URLs (fetched at render time)
-- Run `takumi render --help` for all CLI options
+- Run `takuu render --help` for all CLI options

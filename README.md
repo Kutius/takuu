@@ -1,27 +1,30 @@
-# takumi-cli
+# takuu
 
-CLI tool for rendering JSX/TSX React components to images using [Takumi](https://github.com/kane50613/takumi).
+JSX → Image. Render React components to images using [Takumi](https://github.com/kane50613/takumi).
 
 ## Install
 
 ```bash
-npm install -g takumi-cli
+npm install -g takuu
 ```
 
 ## Usage
 
 ```bash
 # Render a component file
-takumi render my-card.tsx
+takuu render my-card.tsx
 
 # Override output path
-takumi render my-card.tsx -o output/hero.png
+takuu render my-card.tsx -o output/hero.png
 
 # Override dimensions
-takumi render my-card.tsx -w 800 -h 400
+takuu render my-card.tsx -w 800 -H 400
 
 # Override format and quality
-takumi render my-card.tsx -f jpeg -q 85
+takuu render my-card.tsx -f jpeg -q 85
+
+# Pipe JSX from stdin
+echo '<div tw="w-full h-full flex items-center bg-blue-500"/>' | takuu render -o out.png
 ```
 
 ## Component File Format
@@ -55,7 +58,7 @@ npm run build
 npm run typecheck
 
 # Test render
-node dist/cli.cjs render examples/og-card.tsx
+node dist/cli.mjs render examples/og-card.tsx
 ```
 
 ## License
