@@ -2,29 +2,32 @@
 
 JSX → Image. Render React components to images using [Takumi](https://github.com/kane50613/takumi).
 
-## Install
-
-```bash
-npm install -g takuu
-```
-
 ## Usage
 
 ```bash
-# Render a component file
+# Direct usage
+npx takuu render my-card.tsx
+
+# Or install globally
+npm install -g takuu
 takuu render my-card.tsx
+```
+
+```bash
+# Render a component file
+npx takuu render my-card.tsx
 
 # Override output path
-takuu render my-card.tsx -o output/hero.png
+npx takuu render my-card.tsx -o output/hero.png
 
 # Override dimensions
-takuu render my-card.tsx -w 800 -H 400
+npx takuu render my-card.tsx -w 800 -H 400
 
 # Override format and quality
-takuu render my-card.tsx -f jpeg -q 85
+npx takuu render my-card.tsx -f jpeg -q 85
 
 # Pipe JSX from stdin
-echo '<div tw="w-full h-full flex items-center bg-blue-500"/>' | takuu render -o out.png
+echo '<div tw="w-full h-full flex items-center bg-blue-500"/>' | npx takuu render -o out.png
 ```
 
 ## Component File Format
