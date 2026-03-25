@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "description": "JSX → Image CLI. Render React components to images using Takumi.",
-  "author": "",
+  "author": "kutius",
   "license": "MIT",
   "bin": {
     "takuu": "dist/cli.mjs"
@@ -18,7 +18,9 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "release": "bumpp",
     "up": "pnpx taze@latest -I"
   },
   "dependencies": {
@@ -36,6 +38,7 @@
     "@tsconfig/strictest": "^2.0.8",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
+    "bumpp": "^11.0.1",
     "eslint": "^10.1.0",
     "tsdown": "^0.21.4",
     "typescript": "^6.0.2"
