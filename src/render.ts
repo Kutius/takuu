@@ -46,7 +46,7 @@ function loadSource(input: string): { filePath: string; source: string } {
     if (!source.includes("export")) {
       source = `export default function App() { return (${source}); }`;
     }
-    return { filePath: resolve("stdin.tsx"), source };
+    return { filePath: resolve(`takuu-${Date.now()}.tsx`), source };
   }
   const filePath = resolve(input);
   if (!existsSync(filePath)) {
