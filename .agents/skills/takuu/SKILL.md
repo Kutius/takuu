@@ -1,5 +1,5 @@
 ---
-name: rendering-jsx-to-images
+name: takuu
 description: Renders React/TSX components to PNG, WebP, or JPEG images using takuu. Use when generating OG cards, social media banners, thumbnails, or any JSX-to-image task.
 ---
 
