@@ -1,7 +1,7 @@
 {
   "name": "takuu",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JSX → Image CLI. Render React components to images using Takumi.",
   "author": "kutius",
   "license": "MIT",
