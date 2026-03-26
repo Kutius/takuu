@@ -2,18 +2,19 @@
   "name": "takuu",
   "type": "module",
   "version": "0.1.1",
+  "packageManager": "pnpm@10.33.0",
   "description": "JSX → Image CLI. Render React components to images using Takumi.",
   "author": "kutius",
   "license": "MIT",
-  "bin": {
-    "takuu": "dist/cli.mjs"
-  },
   "exports": {
     "./package.json": "./package.json"
   },
+  "bin": {
+    "takuu": "dist/cli.mjs"
+  },
   "files": [
-    "dist",
-    "assets"
+    "assets",
+    "dist"
   ],
   "scripts": {
     "build": "tsdown",
@@ -41,7 +42,6 @@
     "bumpp": "^11.0.1",
     "eslint": "^10.1.0",
     "tsdown": "^0.21.5",
-    "typescript": "^6.0.2"
-  },
-  "packageManager": "pnpm@10.33.0"
+    "typescript": "^5.9.3"
+  }
 }

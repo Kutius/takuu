@@ -36,15 +36,15 @@ echo '<div tw="w-full h-full flex items-center bg-blue-500"/>' | npx takuu rende
 export const render = {
   width: 1200,
   height: 630,
-  format: "png", // "png" | "webp" | "jpeg"
-};
+  format: 'png', // "png" | "webp" | "jpeg"
+}
 
 export default function OgCard() {
   return (
     <div tw="w-full h-full flex items-center justify-center bg-white">
       <h1 tw="text-6xl font-bold">Hello World</h1>
     </div>
-  );
+  )
 }
 ```
 
