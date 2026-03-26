@@ -2,8 +2,19 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "target": "esnext",
-    "module": "preserve",
-    "moduleResolution": "bundler"
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "noEmit": true,
+    "types": ["node"],
+    "strict": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["./**/*.tsx", "./**/*.jsx"]
+  "include": ["./**/*.tsx", "./**/*.jsx", "./**/*.ts", "./**/*.js"]
 }

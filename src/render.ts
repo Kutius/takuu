@@ -15,10 +15,15 @@ import { extractEmojis } from "@takumi-rs/helpers/emoji";
 import { fetchResources } from "@takumi-rs/helpers";
 import { Renderer, extractResourceUrls } from "@takumi-rs/core";
 import type { EmojiType } from "@takumi-rs/helpers/emoji";
+import type { Font } from "@takumi-rs/core";
 import { transformSync } from "oxc-transform";
 import type { ComponentModule, RenderOptions } from "./types.ts";
 
-const renderer = new Renderer();
+function createRenderer(fonts?: Font[]) {
+  return new Renderer({
+    fonts: fonts?.length ? fonts : undefined
+  });
+}
 
 const tmpFiles = new Set<string>();
 
@@ -148,6 +153,7 @@ export async function render(input: string, options: RenderOptions) {
     }
   }
 
+  const renderer = createRenderer(options.fonts);
   const buffer: Buffer = await renderer.render(node, {
     width,
     height,

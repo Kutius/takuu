@@ -56,17 +56,19 @@ cli
         // Resolve fonts
         let fonts: Font[] | undefined;
         if (opts.fonts) {
-          fonts = opts.fonts.map((p) => {
+          const paths = Array.isArray(opts.fonts) ? opts.fonts : [opts.fonts];
+          fonts = paths.map((p: string) => {
             const fp = resolve(p);
             if (!existsSync(fp)) {
               throw new Error(`Font file not found: ${fp}`);
             }
-            return {
-              name: "",
-              data: readFileSync(fp),
-              weight: 400,
-              style: "normal" as const,
-            };
+            // return {
+            //   name: "",
+            //   data: readFileSync(fp),
+            //   weight: 400,
+            //   style: "normal" as const,
+            // };
+            return readFileSync(fp);
           });
         }
 
