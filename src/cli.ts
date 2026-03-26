@@ -3,7 +3,6 @@ import pc from "picocolors";
 import { render } from "./render.ts";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import type { Font } from "@takumi-rs/core";
 
 const pkg = JSON.parse(
   readFileSync(resolve(import.meta.dirname, "../package.json"), "utf-8"),
@@ -41,36 +40,23 @@ cli
       },
     ) => {
       try {
-        // Read from stdin if no input given
         if (!input) {
           if (process.stdin.isTTY) {
             console.error(
-              pc.red("✗") +
-                " No input file. Usage: takuu render <file.tsx>",
+              pc.red("✗") + " No input file. Usage: takuu render <file.tsx>",
             );
             process.exit(1);
           }
           input = "-";
         }
 
-        // Resolve fonts
-        let fonts: Font[] | undefined;
-        if (opts.fonts) {
-          const paths = Array.isArray(opts.fonts) ? opts.fonts : [opts.fonts];
-          fonts = paths.map((p: string) => {
-            const fp = resolve(p);
-            if (!existsSync(fp)) {
-              throw new Error(`Font file not found: ${fp}`);
-            }
-            // return {
-            //   name: "",
-            //   data: readFileSync(fp),
-            //   weight: 400,
-            //   style: "normal" as const,
-            // };
-            return readFileSync(fp);
-          });
-        }
+        const fonts = opts.fonts?.map((p) => {
+          const fp = resolve(p);
+          if (!existsSync(fp)) {
+            throw new Error(`Font file not found: ${fp}`);
+          }
+          return readFileSync(fp);
+        });
 
         const start = performance.now();
         const { outputPath, width, height, format } = await render(input, {

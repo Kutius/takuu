@@ -8,7 +8,6 @@ import {
 } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { randomBytes } from "node:crypto";
-import { createRequire } from "node:module";
 import React from "react";
 import { fromJsx } from "@takumi-rs/helpers/jsx";
 import { extractEmojis } from "@takumi-rs/helpers/emoji";
@@ -17,15 +16,13 @@ import { Renderer, extractResourceUrls } from "@takumi-rs/core";
 import type { EmojiType } from "@takumi-rs/helpers/emoji";
 import type { Font } from "@takumi-rs/core";
 import { transformSync } from "oxc-transform";
-import type { ComponentModule, RenderOptions } from "./types.ts";
+import type { RenderOptions } from "./types.ts";
 
 const notoSansSC = readFileSync(
   resolve(import.meta.dirname, "../assets/NotoSansSC[wght].woff2"),
 );
 
-const defaultFonts: Font[] = [
-  { name: "Noto Sans SC", data: notoSansSC },
-];
+const defaultFonts: Font[] = [{ name: "Noto Sans SC", data: notoSansSC }];
 
 function createRenderer(fonts?: Font[]) {
   return new Renderer({
@@ -42,7 +39,7 @@ function cleanup() {
       unlinkSync(f);
     } catch {}
   }
-}
+};
 
 process.on("exit", cleanup);
 process.on("SIGINT", () => {
@@ -60,7 +57,7 @@ function loadSource(input: string): { filePath: string; source: string } {
     if (!source.includes("export")) {
       source = `export default function App() { return (${source}); }`;
     }
-    return { filePath: resolve(`takuu-${Date.now()}.tsx`), source };
+    return { filePath: `takuu-${Date.now()}.tsx`, source };
   }
   const filePath = resolve(input);
   if (!existsSync(filePath)) {
@@ -78,39 +75,14 @@ function transpile(filePath: string, source: string): string {
   return code;
 }
 
-// Rewrite bare import specifiers to absolute paths so the temp file
-// can be placed anywhere (critical for global/npx installs)
-function rewriteImports(code: string): string {
-  const req = createRequire(require.resolve("@takumi-rs/core"));
-  return code.replace(
-    /from\s+["']([^"']+)["']/g,
-    (match, specifier) => {
-      if (specifier.startsWith(".") || specifier.startsWith("/")) return match;
-      try {
-        return `from "${req.resolve(specifier)}"`;
-      } catch {
-        return match;
-      }
-    },
-  );
-}
-
-function resolveOutputPath(
-  inputPath: string,
-  format: string,
-  options: RenderOptions,
-): string {
-  if (options.output) return resolve(options.output);
-  const baseName = extname(inputPath)
-    ? inputPath.slice(0, -extname(inputPath).length)
-    : inputPath;
-  return `${baseName}.${format}`;
-}
-
-export async function render(input: string, options: RenderOptions) {
+export async function render(
+  input: string,
+  options: RenderOptions & { output?: string },
+) {
   const { filePath, source } = loadSource(input);
-  const code = rewriteImports(transpile(filePath, source));
+  const code = transpile(filePath, source);
 
+  // Write temp file to CLI's directory so all deps resolve from CLI's node_modules
   const tmpPath = resolve(
     import.meta.dirname,
     `.takumi-${randomBytes(8).toString("hex")}.mjs`,
@@ -118,9 +90,9 @@ export async function render(input: string, options: RenderOptions) {
   tmpFiles.add(tmpPath);
   writeFileSync(tmpPath, code);
 
-  let mod: ComponentModule;
+  let mod: Record<string, any>;
   try {
-    mod = (await import(pathToFileURL(tmpPath).href)) as ComponentModule;
+    mod = await import(pathToFileURL(tmpPath).href);
   } catch (e) {
     throw new Error(
       `Failed to load component from ${filePath}:\n${(e as Error).message}`,
@@ -136,45 +108,40 @@ export async function render(input: string, options: RenderOptions) {
     );
   }
 
-  const cleanOptions = Object.fromEntries(
-    Object.entries(options).filter(([, v]) => v !== undefined),
-  );
-  const config = { ...mod.render, ...cleanOptions };
+  const config = { ...mod.render, ...options };
   const width = config.width ?? 1200;
   const height = config.height ?? 630;
   const format = config.format ?? "webp";
-  const quality = config.quality;
-  const devicePixelRatio = config.devicePixelRatio;
-  const emoji = config.emoji;
 
-  const Component = mod.default;
-  const element = React.createElement(Component);
+  const element = React.createElement(mod.default);
   let { node, stylesheets } = await fromJsx(element);
 
   // Process emoji if provider is specified
   let fetchedResources;
-  if (emoji) {
-    node = extractEmojis(node, emoji as EmojiType);
-    const resourceUrls = extractResourceUrls(node);
-    if (resourceUrls.length > 0) {
-      fetchedResources = await fetchResources(resourceUrls);
+  if (config.emoji) {
+    node = extractEmojis(node, config.emoji as EmojiType);
+    const urls = extractResourceUrls(node);
+    if (urls.length > 0) {
+      fetchedResources = await fetchResources(urls);
     }
   }
 
-  const renderer = createRenderer(options.fonts);
+  const renderer = createRenderer(config.fonts);
   const buffer: Buffer = await renderer.render(node, {
     width,
     height,
     format,
-    quality,
-    devicePixelRatio,
+    quality: config.quality,
+    devicePixelRatio: config.devicePixelRatio,
     fetchedResources,
     stylesheets,
   });
 
-  const outputPath = resolveOutputPath(filePath, format, options);
-  mkdirSync(dirname(outputPath), { recursive: true });
-  writeFileSync(outputPath, buffer);
+  const output = options.output
+    ? resolve(options.output)
+    : `${filePath.replace(/\.[^.]+$/, "")}.${format}`;
+  mkdirSync(dirname(output), { recursive: true });
+  writeFileSync(output, buffer);
 
-  return { outputPath, width, height, format };
+  return { output, width, height, format };
 }
