@@ -19,9 +19,18 @@ import type { Font } from "@takumi-rs/core";
 import { transformSync } from "oxc-transform";
 import type { ComponentModule, RenderOptions } from "./types.ts";
 
+const notoSansSC = readFileSync(
+  resolve(import.meta.dirname, "../assets/NotoSansSC[wght].woff2"),
+);
+
+const defaultFonts: Font[] = [
+  { name: "Noto Sans SC", data: notoSansSC },
+];
+
 function createRenderer(fonts?: Font[]) {
   return new Renderer({
-    fonts: fonts?.length ? fonts : undefined
+    loadDefaultFonts: true,
+    fonts: [...defaultFonts, ...(fonts ?? [])],
   });
 }
 
@@ -102,9 +111,8 @@ export async function render(input: string, options: RenderOptions) {
   const { filePath, source } = loadSource(input);
   const code = rewriteImports(transpile(filePath, source));
 
-  const srcDir = dirname(filePath);
   const tmpPath = resolve(
-    srcDir,
+    import.meta.dirname,
     `.takumi-${randomBytes(8).toString("hex")}.mjs`,
   );
   tmpFiles.add(tmpPath);

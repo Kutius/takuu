@@ -12,7 +12,8 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "assets"
   ],
   "scripts": {
     "build": "tsdown",
@@ -24,11 +25,10 @@
     "up": "pnpx taze@latest -I"
   },
   "dependencies": {
-    "@takumi-rs/core": "^1.0.0-beta.16",
-    "@takumi-rs/helpers": "^1.0.0-beta.16",
-    "@takumi-rs/image-response": "^1.0.0-beta.16",
+    "@takumi-rs/core": "^1.0.0-beta.20",
+    "@takumi-rs/helpers": "^1.0.0-beta.20",
     "cac": "^7.0.0",
-    "lucide-react": "^1.6.0",
+    "lucide-react": "^1.7.0",
     "oxc-transform": "^0.121.0",
     "picocolors": "^1.1.1",
     "react": "^19.2.4"
@@ -40,7 +40,7 @@
     "@types/react": "^19.2.14",
     "bumpp": "^11.0.1",
     "eslint": "^10.1.0",
-    "tsdown": "^0.21.4",
+    "tsdown": "^0.21.5",
     "typescript": "^6.0.2"
   },
   "packageManager": "pnpm@10.33.0"

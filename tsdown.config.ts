@@ -11,7 +11,6 @@ export default defineConfig({
     neverBundle: [
       '@takumi-rs/core',
       '@takumi-rs/helpers',
-      '@takumi-rs/image-response',
       'oxc-transform',
     ],
   },
